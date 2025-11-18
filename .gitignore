@@ -1,0 +1,15 @@
+# IDE files
+.idea/
+
+# macOS system files
+*.DS_Store
+
+# Log files
+sdk.log*
+
+# Build output
+bin/
+
+benchmark/
+
+.cluade/

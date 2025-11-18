@@ -1,0 +1,49 @@
+# API Gateway Configuration
+http_listen_addr: ":8091" # HTTP service listen address
+grpc_listen_addr: ":50051" # gRPC service listen address (if needed)
+
+# Database Configuration
+database:
+  dsn: "postgres://testuser:secret@localhost:5433/testdb?sslmode=disable"
+  max_connections: 50
+  min_connections: 10
+  max_idle_time: "30m"        # Shorter idle time for API Gateway (lighter workload)
+  max_lifetime: "12h"         # Shorter lifetime for API Gateway
+
+# Kafka Producer Configuration
+kafka_producer:
+  brokers: ["localhost:9092"]
+  topic: "log_submissions"
+
+  # Batch processing settings (match batch_processor for consistency)
+  batch_size: 200                    # Number of messages per batch
+  batch_timeout: 100ms              # Maximum wait time for batch
+  batch_bytes: 5242880              # 5MB batch size limit (in bytes)
+
+  # Reliability settings
+  required_acks: "one"              # none, one, or all
+  async: true                       # Async mode for non-blocking
+
+  # Performance settings
+  write_timeout: 5s                 # Write timeout
+  read_timeout: 5s                  # Read timeout
+
+# Batch Processing Configuration
+batch_processor:
+  batch_size: 200                    # Number of logs per batch
+  batch_timeout: 100ms              # Maximum wait time for batch
+  max_buffer_size: 10000            # Maximum buffer size before dropping
+  flush_channel_buffer: 300         # Buffer size for flush channel (increased for high load)
+  
+# HTTP Server Configuration
+http_server:
+  read_timeout: 5s
+  write_timeout: 10s
+  idle_timeout: 60s
+  max_header_bytes: 1048576 # 1MB
+
+# Monitoring Configuration
+monitoring:
+  enable_metrics: true
+  metrics_path: "/metrics"
+  health_check_path: "/health"

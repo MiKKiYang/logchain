@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package logingestion;
+
+// Import Google's Timestamp type (optional, can also use string directly)
+import "google/protobuf/timestamp.proto";
+
+option go_package = "tlng/proto/logingestion"; // Go package path
+
+// LogIngestion service definition
+service LogIngestion {
+  // SubmitLog method for submitting a single log entry, supports HTTP POST
+  rpc SubmitLog(SubmitLogRequest) returns (SubmitLogResponse);
+}
+
+// Request message for submitting a log
+message SubmitLogRequest {
+  // Log content in raw format (required)
+  string log_content = 1;
+
+  // (Optional) Client-specified log hash, server will validate if provided
+  string client_log_hash = 2;
+
+  // (Optional) Client-specified source organization ID, server will validate
+  // permission if provided
+  string client_source_org_id = 3;
+
+  // (Optional) Client-specified original timestamp
+  google.protobuf.Timestamp client_timestamp = 4;
+}
+
+// Response message for log submission
+message SubmitLogResponse {
+  // Server-generated unique request ID (UUID)
+  string request_id = 1;
+
+  // Server-computed or validated log hash (SHA256)
+  string server_log_hash = 2;
+
+  // Server-recorded received timestamp
+  google.protobuf.Timestamp server_received_timestamp = 3;
+
+  // (Optional) Status information, e.g., "ACCEPTED"
+  string status = 4;
+}

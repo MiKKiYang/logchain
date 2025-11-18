@@ -1,0 +1,17 @@
+# === Common Blockchain Configuration ===
+# This file contains configuration common to all blockchain types
+
+# === Blockchain type selection ===
+blockchain_type: "chainmaker"  # Options: "chainmaker", "ethereum" (future)
+
+# === Common behavior configuration ===
+retry_limit: 20
+retry_interval: 500  # milliseconds
+timeout_seconds: 15
+
+# === Chain-specific configuration ===
+# Chain-specific configuration is loaded from separate files:
+# - config/clients/chainmaker.yml (for ChainMaker)
+# - config/clients/ethereum.yml (for Ethereum - future)
+#
+# Please refer to the respective configuration files for chain-specific settings.

@@ -1,0 +1,42 @@
+# Attestation Engine Configuration
+
+# Database Configuration
+database:
+  dsn: "postgres://testuser:secret@localhost:5433/testdb?sslmode=disable"
+  max_connections: 50
+  min_connections: 10
+  max_idle_time: 1h
+  max_lifetime: 24h
+
+# Kafka Consumer Configuration
+kafka_consumer:
+  brokers: ["localhost:9092"]
+  topic: "log_submissions"
+  group_id: "notarization_engine_group_1"
+  count: 6                    # Number of consumers, should match Kafka partitions
+  session_timeout: 30s
+  heartbeat_interval: 3s
+  max_processing_time: 5m
+  auto_offset_reset: "earliest"
+  enable_auto_commit: false
+
+# Worker Configuration
+worker:
+  concurrency: 10             # Number of concurrent workers per consumer
+  batch_size: 200             # Number of logs per batch for blockchain
+  batch_timeout: 0.5s           # Maximum wait time for batch
+  consumer_retry_delay: 5s     # Delay when consumer encounters errors
+  blockchain_timeout: 15s     # Timeout for blockchain operations
+
+# Business Rules Configuration
+max_task_retries: 3           # Maximum retry attempts per task (business rule)
+
+# Blockchain Client Configuration
+blockchain_client_config_path: "config/blockchain.defaults.yml"
+
+# Monitoring Configuration
+monitoring:
+  enable_metrics: true
+  metrics_path: "/metrics"
+  health_check_path: "/health"
+  log_level: "info"           # trace, debug, info, warn, error
