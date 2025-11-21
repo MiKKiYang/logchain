@@ -6,7 +6,7 @@ This file provides development guidance for working with code in this repository
 
 This is the **development guide** focused on implementation details, coding standards, and practical development guidance.
 
-- 🏗️ **For system architecture and design decisions**, see [design.md](design.md)
+- 🏗️ **For system architecture and design decisions**, see [design.md](docs/design.md)
 - 🚀 **For project overview and quick start**, see [README.md](README.md)
 - 💻 **This document**: Development-specific guidance and implementation details
 
@@ -14,7 +14,7 @@ This is the **development guide** focused on implementation details, coding stan
 
 This is a Trusted Log Attestation System (可信日志存证系统) - a system for transparently attesting logs on a blockchain with multi-dimensional verifiability.
 
-📖 **For complete system architecture, component specifications, and design decisions, see [design.md](design.md)**
+📖 **For complete system architecture, component specifications, and design decisions, see [design.md](docs/design.md)**
 
 This file provides development-specific guidance and practical implementation details.
 
@@ -24,11 +24,11 @@ Currently implemented services:
 
 ## Architecture (Development Focus)
 
-This section focuses on implementation details. For architectural overview, see [design.md](design.md).
+This section focuses on implementation details. For architectural overview, see [design.md](docs/design.md).
 
 ### Implementation Status (Development Focus)
 
-📖 **For detailed component specifications, see [design.md](design.md)**
+📖 **For detailed component specifications, see [design.md](docs/design.md)**
 
 **✅ Implemented Services:**
 - **Log Ingestion Service** (`cmd/ingestion/`) - HTTP/gRPC endpoints with SHA256 hashing and Kafka integration
@@ -69,7 +69,7 @@ tlng/
     └── adapters/            # Benthos configs
 ```
 
-📖 **For detailed component responsibilities, see [design.md](design.md)**
+📖 **For detailed component responsibilities, see [design.md](docs/design.md)**
 
 ## Development Commands
 
@@ -133,7 +133,7 @@ go test -cover ./...
 
 ### Key Components (Development Focus)
 
-📖 **For detailed message flow and protocols, see [design.md](design.md)**
+📖 **For detailed message flow and protocols, see [design.md](docs/design.md)**
 
 **Log Ingestion Service** (`cmd/ingestion/`):
 - HTTP endpoint: `POST /v1/logs`
@@ -153,7 +153,7 @@ go test -cover ./...
 ### Development Guidelines
 
 **Database Schema:**
-📖 **For complete schema details, see [design.md](design.md)**
+📖 **For complete schema details, see [design.md](docs/design.md)**
 
 Core table: `Tbl_Log_Status` tracks log lifecycle from submission to blockchain confirmation.
 
@@ -191,7 +191,7 @@ Core table: `Tbl_Log_Status` tracks log lifecycle from submission to blockchain 
 - Supporting Infrastructure (Kafka, configuration management)
 
 **📋 TODO Components:**
-📖 **For detailed specifications and priorities, see [design.md](design.md)**
+📖 **For detailed specifications and priorities, see [design.md](docs/design.md)**
 - API Gateway with unified authentication
 - Benthos adapters for heterogeneous protocols
 - Query Layer with multi-dimensional APIs

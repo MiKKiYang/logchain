@@ -16,6 +16,10 @@
 
 ## II. System Architecture
 
+![Simplified Architecture](images/Architecture(Simplified).jpg)
+
+![Detailed Architecture](images/Architecture(Detailed).jpg)
+
 ### 1. Ingress Layer - Traffic Entry and Routing
 
 **Component**: `API Gateway` (`Traefik` / `Nginx Ingress`)  

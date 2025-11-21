@@ -6,7 +6,7 @@ The Query Layer provides multi-dimensional query services for different user typ
 
 ## Planned APIs
 
-Based on `design.md`, this layer will implement three distinct APIs:
+Based on `../docs/design.md`, this layer will implement three distinct APIs:
 
 ### API 1: Task Status Query (for API Callers)
 - **Endpoint**: `GET /status/{request_id}`

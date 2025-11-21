@@ -6,7 +6,7 @@ The Ingress Layer serves as the traffic entry point and routing layer for the en
 
 ## Responsibilities
 
-Based on `design.md`, this layer handles:
+Based on `../docs/design.md`, this layer handles:
 
 ### 1. TLS Termination
 - Processes all HTTPS requests
