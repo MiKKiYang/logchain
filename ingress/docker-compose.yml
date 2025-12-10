@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3.4'
 
 services:
   nginx-gateway:
@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
     container_name: nginx-api-gateway
     ports:
-      - "80:80"
+      - "8080:80"
       - "443:443"
       - "50052:50052"
     volumes:
@@ -35,7 +35,6 @@ services:
       interval: 30s
       timeout: 3s
       retries: 3
-      start_period: 5s
 
   # Redis for API key storage (optional, only needed if API_KEY_AUTH_METHOD=redis)
   # Uncomment if using Redis for API key authentication

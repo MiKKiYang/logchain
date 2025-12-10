@@ -2,6 +2,7 @@
 -- Validates client certificate and IP address for consortium members
 
 local cjson = require "cjson"
+package.path = package.path .. ';/etc/nginx/lua/?.lua'
 local auth_common = require "auth_common"
 
 local IP_WHITELIST_FILE = "/etc/nginx/conf.d/consortium-ip-whitelist.json"
@@ -50,7 +51,7 @@ end
 
 -- Main authentication function
 local function authenticate()
-    local verify_result      = ngx.var.ssl_client_verify
+    local verify_result = ngx.var.ssl_client_verify
 
     if verify_result ~= "SUCCESS" then
         -- Log to error.log (for monitoring/alerting)

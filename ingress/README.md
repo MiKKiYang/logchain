@@ -63,7 +63,7 @@ Based on `../docs/design.md`, this layer handles:
 
 ```bash
 cd ingress
-./scripts/generate-ssl-certs.sh
+bash scripts/generate-ssl-certs.sh
 ```
 
 This will create:
@@ -73,7 +73,7 @@ This will create:
 ### 2. Setup Configuration Files
 
 ```bash
-./scripts/setup-config.sh
+bash scripts/setup-config.sh
 ```
 
 This will create configuration files from examples:
@@ -82,38 +82,7 @@ This will create configuration files from examples:
 
 **Important**: Update these files with your actual API keys and IP whitelists.
 
-### 3. Validate Configuration
-
-```bash
-./scripts/validate-config.sh
-```
-
-This validates:
-- Nginx configuration syntax
-- JSON configuration files
-- SSL certificates
-
-### 4. Start the API Gateway
-
-```bash
-docker-compose up -d
-```
-
-The API Gateway will be available at:
-- HTTP: `http://localhost:80` (redirects to HTTPS)
-- HTTPS: `https://localhost:443`
-- gRPC: `localhost:50052`
-
-### 5. Verify Health
-
-```bash
-curl http://localhost/health
-# Should return: healthy
-```
-
-## Configuration
-
-### API Key Authentication
+### 3. Configure API-Key Authentication
 
 API keys are stored in `nginx/conf.d/api-keys.json`:
 
@@ -135,7 +104,7 @@ API keys are stored in `nginx/conf.d/api-keys.json`:
 - `redis`: Redis-based (for production)
 - `service`: External auth service (for centralized management)
 
-### mTLS + IP Whitelist Authentication
+### 4. Configure mTLS + IP Whitelist Authentication
 
 For consortium members, configure:
 
@@ -149,18 +118,31 @@ For consortium members, configure:
         "192.168.1.0",
         "10.0.0.100"
       ]
+    },
+    "member-002": {
+      "name": "Regulatory Authority B",
+      "ip_whitelist": [
+        "203.0.113.0",
+        "198.51.100.50"
+      ]
     }
   }
 }
 ```
 
-**Generate Client Certificates**:
+**Important** `Currently, the memberId (like member-001) and name fields can be configured freely. These two fields are reserved as redundancies for future expansion`
+
+### 5. Generate Client Certificates
+
 ```bash
-./scripts/generate-client-cert.sh member-001 "Regulatory Authority A"
+bash scripts/generate-client-cert.sh member-001 "Regulatory Authority A"
 ```
 - Client certificate for mTLS (`ssl/clients/member-001/client-cert.pem`, `ssl/clients/member-001/client-key.pem`, `ssl/clients/member-001/client.p12`)
 
-### Backend Services
+**Important** `The current certificate is issued by default using a CA certificate under SSL. If you need to use your own CA for issuance, please configure the corresponding CA certificate in the ssl_client_certificate field of mtls.conf`
+
+### 6. Configure Backend Services 
+**Important** `If you are only testing API-Gateway-related functionality, you can temporarily leave the backend service unconfigured`
 
 Configure backend service addresses in `nginx/nginx.conf`:
 
@@ -173,6 +155,23 @@ upstream ingestion_http {
     keepalive 32;
 }
 ```
+### 7. Start the API Gateway
+
+```bash
+docker-compose up -d
+```
+
+The API Gateway will be available at:
+- HTTP: `http://localhost:8080` (redirects to HTTPS)
+- HTTPS: `https://localhost:443`
+- gRPC: `localhost:50052`
+
+### 8. Verify Health
+
+```bash
+curl http://localhost:8080/health
+# Should return: healthy
+```
 
 ## API Endpoints
 
@@ -180,18 +179,25 @@ upstream ingestion_http {
 
 **HTTP:**
 ```bash
-curl -X POST https://api-gateway/v1/logs \
-  -H "X-API-Key: your-api-key" \
+curl -k -XPOST https://localhost/v1/logs \
+  -H "X-API-Key: example-api-key-12345" \
+  -H "Content-Type: application/json" \
+  -d '{"log_content": "your log content here"}'
+```
+```bash
+```Insufficient permissions```
+curl -k -XPOST https://localhost/v1/logs \
+  -H "X-API-Key: example-api-key-67890" \
   -H "Content-Type: application/json" \
   -d '{"log_content": "your log content here"}'
 ```
 
 **gRPC:**
 ```bash
-grpcurl -plaintext \
-  -H "X-API-Key: your-api-key" \
+grpcurl -insecure \
+  -H "X-API-Key: example-api-key-12345" \
   -d '{"log_content": "your log content here"}' \
-  api-gateway:50052 \
+  localhost:50052 \
   logingestion.LogIngestion/SubmitLog
 ```
 
@@ -199,14 +205,13 @@ grpcurl -plaintext \
 
 **Status Query:**
 ```bash
-curl https://api-gateway/status/{request_id} \
-  -H "X-API-Key: your-api-key"
+curl -k -H "X-API-Key: example-api-key-12345" https://localhost/status/{request_id}
 ```
 
 **Content-based Query:**
 ```bash
-curl -X POST https://api-gateway/query_by_content \
-  -H "X-API-Key: your-api-key" \
+curl -k -X POST https://localhost/query_by_content \
+  -H "X-API-Key: example-api-key-12345" \
   -H "Content-Type: application/json" \
   -d '{"log_content": "your log content here"}'
 ```
@@ -215,7 +220,7 @@ curl -X POST https://api-gateway/query_by_content \
 
 **Query by Transaction Hash:**
 ```bash
-curl https://api-gateway/log/by_tx/{tx_hash} \
+curl https://localhost/log/by_tx/{tx_hash} \
   --cert ssl/clients/member-001/client-cert.pem \
   --key ssl/clients/member-001/client-key.pem \
   --cacert ssl/ca-cert.pem
@@ -223,7 +228,7 @@ curl https://api-gateway/log/by_tx/{tx_hash} \
 
 **Query by On-Chain Log ID:**
 ```bash
-curl https://api-gateway/log/{on_chain_log_id} \
+curl https://localhost/log/{on_chain_log_id} \
   --cert ssl/clients/member-001/client-cert.pem \
   --key ssl/clients/member-001/client-key.pem \
   --cacert ssl/ca-cert.pem
@@ -253,14 +258,18 @@ Update `nginx/conf.d/api-keys.json` with actual API keys. Consider:
 
 Update `nginx/conf.d/consortium-ip-whitelist.json` with actual consortium member IPs.
 
-### 4. Enable Monitoring
+### 4. Configure Upstream addr
+
+Update `nginx/nginx.conf` with actual upstream addr
+
+### 5. Enable Monitoring
 
 Monitor:
 - Access logs: `logs/access.log`
 - Error logs: `logs/error.log`
 - Audit logs: `logs/audit.log`
 
-### 5. Set Environment Variables
+### 6. Set Environment Variables
 
 ```bash
 # In docker-compose.yml or .env file
@@ -294,7 +303,7 @@ docker exec nginx-api-gateway tail -f /var/log/nginx/audit.log
 ### Reload Configuration
 
 ```bash
-docker exec nginx-api-gateway nginx -s reload
+docker exec nginx-api-gateway openresty -c /etc/nginx/nginx.conf -s reload
 ```
 
 ## Integration with Other Services

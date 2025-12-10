@@ -3,6 +3,7 @@
 
 local http = require "resty.http"
 local cjson = require "cjson"
+package.path = package.path .. ';/etc/nginx/lua/?.lua'
 local auth_common = require "auth_common"
 
 -- Configuration: API Key validation method
