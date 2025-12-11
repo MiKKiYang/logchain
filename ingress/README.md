@@ -155,7 +155,17 @@ upstream ingestion_http {
     keepalive 32;
 }
 ```
-### 7. Start the API Gateway
+
+### 7. Configure log directory user group
+**Important** `Due to OpenResty using the nobody user, if the host path is mounted inside the container at /var/log/nginx, the nobody group needs to be added to the host path`
+
+```bash
+chown -R nobody:nobody $hostPath
+```
+
+you also can exec `chown -R nobody:nobody /var/log/nginx` in the container
+
+### 8. Start the API Gateway
 
 ```bash
 docker-compose up -d
@@ -166,7 +176,7 @@ The API Gateway will be available at:
 - HTTPS: `https://localhost:443`
 - gRPC: `localhost:50052`
 
-### 8. Verify Health
+### 9. Verify Health
 
 ```bash
 curl http://localhost:8080/health

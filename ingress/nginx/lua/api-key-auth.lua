@@ -179,8 +179,8 @@ end
 
 -- Main authentication function
 local function authenticate()
-    -- Get API Key from header
-    local api_key = ngx.var.http_x_api_key
+    -- Get API Key: prefer header, fallback to query parameter
+    local api_key = ngx.var.http_x_api_key or ngx.var.arg_api_key
 
     if not api_key or api_key == "" then
         ngx.log(ngx.WARN, "[AUTH_FAIL] Missing API key: ip=", ngx.var.remote_addr,
