@@ -17,6 +17,8 @@ local REDIS_PORT = tonumber(os.getenv("REDIS_PORT") or 6379)
 local AUTH_SERVICE_URL = os.getenv("AUTH_SERVICE_URL") or "http://auth-service:8080/validate"
 local AUDIT_LOG_FILE = "/var/log/nginx/audit.log"
 local REQUIRED_GRPC_PERMISSION = "submit_log"
+local AUTH_SERVICE_KEEPALIVE_TIMEOUT = 60000
+local AUTH_SERVICE_KEEPALIVE_POOL = 100
 
 local validate_activation_window = auth_common.validate_activation_window
 local ensure_permission = auth_common.ensure_permission
@@ -143,21 +145,35 @@ local function validate_api_key_service(api_key)
     
     if not res then
         ngx.log(ngx.ERR, "Failed to call auth service: ", err)
+        httpc:close()
         return nil, "Authentication service unavailable"
     end
     
     if res.status ~= 200 then
+        ngx.log(ngx.ERR, "Auth service returned non-200: ", res.status)
+        httpc:close()
         return nil, "Invalid API key"
     end
     
     local ok, result = pcall(cjson.decode, res.body)
     if not ok then
         ngx.log(ngx.ERR, "Failed to parse auth service response: ", result)
+        httpc:close()
         return nil, "Authentication service error"
     end
     
     if not result.valid then
+        httpc:close()
         return nil, result.error or "Invalid API key"
+    end
+
+    -- Keepalive only for successful validations
+    local ka_ok, ka_err = httpc:set_keepalive(AUTH_SERVICE_KEEPALIVE_TIMEOUT, AUTH_SERVICE_KEEPALIVE_POOL)
+    if not ka_ok then
+        ngx.log(ngx.ERR, "Failed to set keepalive for auth service: ", ka_err)
+        httpc:close()
+    else
+        ngx.log(ngx.ERR, "Auth service connection kept alive for reuse")
     end
     
     return result, nil
