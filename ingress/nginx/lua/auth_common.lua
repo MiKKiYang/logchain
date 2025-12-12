@@ -126,7 +126,6 @@ local function check_auth_failure_limit(key)
     local limit_count = require "resty.limit.count"
     
     -- Create a limit object with shared memory zone
-    -- The shared memory zone should be defined in nginx.conf as: lua_shared_dict auth_failures 10m;
     local lim, err = limit_count.new("auth_failures", MAX_AUTH_FAILURES, AUTH_FAILURE_WINDOW)
     if not lim then
         ngx.log(ngx.ERR, "Failed to create limit object: ", err)
