@@ -1,0 +1,49 @@
+types {
+    text/html                             html htm shtml;
+    text/css                              css;
+    text/plain                            txt;
+
+    application/javascript                js;
+
+    application/xml                       xml;
+
+    application/json                      json;
+
+    application/rss+xml                   rss;
+    application/atom+xml                  atom;
+    application/xhtml+xml                 xhtml;
+    application/x-web-app-manifest+json   webapp;
+
+    application/font-woff                 woff;
+    application/font-woff2                woff2;
+    application/vnd.ms-fontobject         eot;
+    font/opentype                         otf;
+    font/ttf                              ttf;
+
+    image/gif                             gif;
+    image/jpeg                            jpeg jpg;
+    image/png                             png;
+    image/svg+xml                         svg svgz;
+    image/webp                            webp;
+    image/avif                            avif;
+    image/apng                            apng;
+
+    video/mp4                             mp4;
+    video/ogg                             ogg;
+    video/webm                            webm;
+    audio/mpeg                            mp3;
+    audio/ogg                             oga;
+    audio/wav                             wav;
+    audio/webm                            weba;
+
+    application/pdf                       pdf;
+    application/zip                       zip;
+    application/x-gzip                    gz;
+    application/x-compressed              tgz;
+    application/x-tar                     tar;
+
+    application/octet-stream              bin exe dll;
+    application/x-rar-compressed          rar;
+    application/x-7z-compressed           7z;
+    application/wasm                      wasm;
+}

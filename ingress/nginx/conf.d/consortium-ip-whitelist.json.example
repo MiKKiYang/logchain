@@ -1,0 +1,20 @@
+{
+  "members": {
+    "member-001": {
+      "name": "Regulatory Authority A",
+      "ip_whitelist": [
+        "192.168.1.0",
+        "10.0.0.100",
+        "172.16.0.0"
+      ]
+    },
+    "member-002": {
+      "name": "Audit Firm B",
+      "ip_whitelist": [
+        "203.0.113.0",
+        "198.51.100.50"
+      ]
+    }
+  }
+}
+
