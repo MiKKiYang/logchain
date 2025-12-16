@@ -1,0 +1,44 @@
+input:
+  broker:
+    inputs:
+      - socket_server:
+          network: udp
+          address: ${SYSLOG_UDP_ADDR:0.0.0.0:5514}
+      - socket_server:
+          network: tcp
+          address: ${SYSLOG_TCP_ADDR:0.0.0.0:6514}
+
+pipeline:
+  processors:
+    - label: optional_rate_limit
+      switch:
+        - check: env("RATE_LIMIT_ENABLED").or("false") == "true"
+          processors:
+            - throttle:
+                count: ${RATE_LIMIT_COUNT:1000}
+                period: ${RATE_LIMIT_PERIOD:1s}
+                drop: true
+    - parse_log:
+        format: syslog_rfc5424
+        best_effort: true
+    - mapping: |
+        root.log_content = this.message
+        root.client_source_org_id = env("DEFAULT_ORG_ID").or("")
+        root.client_timestamp = this.timestamp
+
+output:
+  http_client:
+    url: ${INGESTION_ENDPOINT:http://ingestion:8091/v1/logs}
+    verb: POST
+    headers:
+      Content-Type: application/json
+      X-Source-Adapter: syslog
+      # Internal-token?
+      X-Api-Key: ${INGESTION_API_KEY:}
+    timeout: 5s
+    retries: 10
+    retry_period: 2s
+    max_retry_backoff: 1m
+    batching:
+      count: ${HTTP_BATCH_COUNT:50}
+      period: ${HTTP_BATCH_PERIOD:1s}

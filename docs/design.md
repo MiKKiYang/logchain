@@ -63,7 +63,7 @@
 **Responsibilities**: Unified processing entry for all log flows
 
 **Key Workflows**:
-* Receives standardized log content from direct clients (`HTTP`/`gRPC`) or `Benthos` adapters
+* Receives standardized log content from direct clients (`HTTP`/`gRPC`)
 * Obtains caller identity information from request context (from API Gateway or network layer identification)
 * Calculates `SHA256` hash and generates `UUID` as `request_id`
 * Immediately returns `request_id` and hash to the caller

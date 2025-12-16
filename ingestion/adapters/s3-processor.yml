@@ -1,0 +1,48 @@
+input:
+  label: s3_logs
+  aws_s3:
+    bucket: ${S3_BUCKET_NAME:logs-bucket}
+    prefix: ${S3_PREFIX:incoming/}
+    region: ${AWS_REGION:us-east-1}
+    credentials:
+      # ak
+      id: ${AWS_ACCESS_KEY_ID:}
+      # sk
+      secret: ${AWS_SECRET_ACCESS_KEY:}
+      token: ${AWS_SESSION_TOKEN:}
+    delete_objects: ${S3_DELETE_AFTER_READ:false}
+
+pipeline:
+  processors:
+    - label: optional_rate_limit
+      switch:
+        - check: env("RATE_LIMIT_ENABLED").or("false") == "true"
+          processors:
+            - throttle:
+                count: ${RATE_LIMIT_COUNT:1000}
+                period: ${RATE_LIMIT_PERIOD:1s}
+                drop: true
+    - label: normalize_s3
+      mapping: |
+        let org_id = env("DEFAULT_ORG_ID").or("")
+        let ts = now()
+        root.log_content = content().string()
+        root.client_source_org_id = $org_id
+        root.client_timestamp = $ts.ts_format()
+        meta.source = "s3"
+
+output:
+  http_client:
+    url: ${INGESTION_ENDPOINT:http://ingestion:8091/v1/logs}
+    verb: POST
+    headers:
+      Content-Type: application/json
+      X-Source-Adapter: aws_s3
+      X-Api-Key: ${INGESTION_API_KEY:}
+    timeout: 5s
+    retries: 10
+    retry_period: 2s
+    max_retry_backoff: 1m
+    batching:
+      count: ${HTTP_BATCH_COUNT:50}
+      period: ${HTTP_BATCH_PERIOD:1s}
