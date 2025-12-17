@@ -27,7 +27,7 @@ These adapters work with the API Gateway to:
 ## Configuration Files
 
 当前配置文件：
-- `syslog.yml` - Syslog 适配器（UDP/TCP 514 口）
+- `syslog.yml` - Syslog 适配器（UDP 5514 / TCP 6514 默认）
 - `kafka-consumer.yml` - Kafka Topic 适配器
 - `s3-processor.yml` - S3 文件适配器（按行切分）
 
