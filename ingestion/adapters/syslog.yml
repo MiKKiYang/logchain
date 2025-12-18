@@ -42,7 +42,6 @@ output:
     headers:
       Content-Type: application/json
       X-Source-Adapter: syslog
-      # Internal-token?
       X-Api-Key: ${INGESTION_API_KEY:}
     timeout: 5s
     retries: 10

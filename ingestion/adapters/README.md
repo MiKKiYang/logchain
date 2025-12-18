@@ -43,13 +43,13 @@ These adapters work with the API Gateway to:
 ### Syslog 适配器
 ```bash
 export SYSLOG_UDP_ADDR=0.0.0.0:5514
-export SYSLOG_TCP_ADDR=0.0.0.0:5514
+export SYSLOG_TCP_ADDR=0.0.0.0:6514
 export RATE_LIMIT_COUNT=
 export RATE_LIMIT_PERIOD=
-export RATE_LIMIT_ENABLED=
-export DEFAULT_ORG_ID= 
-export INGESTION_ENDPOINT= 
-export INGESTION_API_KEY= 
+export RATE_LIMIT_ENABLED=true
+export DEFAULT_ORG_ID=dkb
+export INGESTION_ENDPOINT=http://127.0.0.1:8093/v1/logs
+export INGESTION_API_KEY=dkbmtb
 export HTTP_BATCH_COUNT= 
 export HTTP_BATCH_PERIOD= 
 
@@ -59,19 +59,20 @@ export HTTP_BATCH_PERIOD=
 
 ### Kafka 适配器
 ```bash
-export KAFKA_BROKERS=broker:9092
-export KAFKA_TOPIC=logs.raw
-export KAFKA_CONSUMER_GROUP=benthos-adapter
-export KAFKA_CLIENT_ID=
-export KAFKA_CA_FILE=
-export KAFKA_CLIENT_CERT_FILE=
-export KAFKA_CLIENT_KEY_FILE=
+export KAFKA_BROKERS=localhost:8066
+export KAFKA_TOPIC=yykj-topic-ssl
+export KAFKA_CONSUMER_GROUP=benthos-adapter-kafka
+export KAFKA_CLIENT_ID=kfk
+export KAFKA_CA_FILE=/root/logchain/ingestion/adapters/kafka/ssl/cert/ca-cert
+export KAFKA_SERVER_TLS_ENABLED=true
+export KAFKA_CLIENT_CERT_FILE=/root/logchain/ingestion/adapters/kafka/ssl/cert/client/client.crt
+export KAFKA_CLIENT_KEY_FILE=/root/logchain/ingestion/adapters/kafka/ssl/cert/client/client.key
 export RATE_LIMIT_COUNT=
 export RATE_LIMIT_PERIOD=
-export RATE_LIMIT_ENABLED=
-export DEFAULT_ORG_ID=
-export INGESTION_ENDPOINT=
-export INGESTION_API_KEY=
+export RATE_LIMIT_ENABLED=true
+export DEFAULT_ORG_ID=dkb
+export INGESTION_ENDPOINT=http://127.0.0.1:8093/v1/logs
+export INGESTION_API_KEY=dkbmtb
 export HTTP_BATCH_COUNT=
 export HTTP_BATCH_PERIOD=
 

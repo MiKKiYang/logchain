@@ -9,7 +9,7 @@ input:
     commit_period: 1s
 
     tls:
-      enabled: true
+      enabled: ${KAFKA_SERVER_TLS_ENABLED:false}
       root_cas_file: ${KAFKA_CA_FILE:./ca.pem}
       # verify server cert
       skip_cert_verify: false
