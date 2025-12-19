@@ -46,16 +46,21 @@ func main() {
 	}
 	defer dbStore.Close()
 
-	// 3. Initialize Blockchain Client
-	logger.Println("Initializing blockchain client...")
-	bcClient, err := blockchain.NewBlockchainClientFromFile(
-		queryCfg.Blockchain.ChainMakerConfig,
-		logger,
-	)
-	if err != nil {
-		logger.Fatalf("FATAL: Failed to initialize blockchain client: %v", err)
+	// 3. Initialize Blockchain Client (conditionally)
+	var bcClient *blockchain.Client
+	if queryCfg.Blockchain.Enabled {
+		logger.Println("Initializing blockchain client...")
+		bcClient, err = blockchain.NewBlockchainClientFromFile(
+			queryCfg.Blockchain.ChainMakerConfig,
+			logger,
+		)
+		if err != nil {
+			logger.Fatalf("FATAL: Failed to initialize blockchain client: %v", err)
+		}
+		defer bcClient.Close()
+	} else {
+		logger.Println("Blockchain client is disabled in configuration; skipping initialization.")
 	}
-	defer bcClient.Close()
 
 	// 4. Create Query Service
 	logger.Println("Initializing query service...")
