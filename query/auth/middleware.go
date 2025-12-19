@@ -73,6 +73,11 @@ func RequireAPIKey(next http.Handler) http.Handler {
 			http.Error(w, `{"error":"Unauthorized","message":"Missing client ID"}`, http.StatusUnauthorized)
 			return
 		}
+		if authCtx.OrgID == "" {
+			w.Header().Set("Content-Type", "application/json")
+			http.Error(w, `{"error":"Unauthorized","message":"Missing organization ID"}`, http.StatusUnauthorized)
+			return
+		}
 
 		// Add auth context to request context
 		ctx := WithAuthContext(r.Context(), authCtx)
