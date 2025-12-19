@@ -33,6 +33,11 @@ These adapters work with the API Gateway to:
 
 ## 使用方法
 
+### benthos 下载
+
+- `原benthosdev/benthos于2024年被redpanda收购，原benthos已被拆分为基础版redpanda-data/benthos及全连接器版redpanda-data/connect, 本模块采用全连接器版`
+- `下载链接: https://github.com/redpanda-data/connect/releases`
+
 ### 环境变量（通用）
 - `INGESTION_ENDPOINT`: 日志接入服务地址，默认 `http://ingestion:8091/v1/logs`
 - `INGESTION_API_KEY`: 可选，若接入服务启用 API Key 则填写
