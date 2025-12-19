@@ -20,6 +20,6 @@ CREATE TABLE IF NOT EXISTS tbl_log_status (
 
 -- Indexes for query APIs
 -- API 1: GET /v1/status/{request_id} - uses request_id (already PRIMARY KEY, no extra index needed)
--- API 2: POST /v1/query - uses log_hash for content-based lookup
+-- API 2: POST /v1/query_by_content - uses log_hash for content-based lookup
 CREATE INDEX IF NOT EXISTS idx_log_status_log_hash ON tbl_log_status (log_hash);
 -- API 3: GET /v1/audit/log/{log_hash} - uses log_hash (covered by above index)
