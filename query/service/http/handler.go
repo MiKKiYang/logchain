@@ -82,13 +82,15 @@ func (h *Handler) QueryByContent(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Ensure the request body is closed when we're done
+	defer r.Body.Close()
+
 	// Parse request body
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		writeError(w, http.StatusBadRequest, "failed to read request body")
 		return
 	}
-	defer r.Body.Close()
 
 	var req QueryByContentRequest
 	if err := json.Unmarshal(body, &req); err != nil {
