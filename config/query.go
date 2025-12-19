@@ -65,7 +65,8 @@ func LoadQueryConfig(path string) (*QueryConfig, error) {
 func (c *QueryConfig) SetDefaults() {
 	// Server defaults
 	if c.Server.HTTPPort <= 0 {
-		c.Server.HTTPPort = 8082
+		// NOTE: This default must match the value in query.defaults.yml.
+		c.Server.HTTPPort = 8083
 	}
 	if c.Server.ReadTimeout == "" {
 		c.Server.ReadTimeout = "30s"
