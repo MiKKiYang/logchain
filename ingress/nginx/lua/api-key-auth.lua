@@ -35,9 +35,9 @@ local function get_required_permission()
 
     if method == "POST" and uri == "/v1/logs" then
         return "submit_log"
-    elseif method == "GET" and uri:find("^/status/") then
+    elseif method == "GET" and uri:find("^/v1/query/status/") then
         return "query_status"
-    elseif method == "POST" and uri == "/query_by_content" then
+    elseif method == "POST" and uri == "/v1/query_by_content" then
         return "query_by_content"
     else
         return nil
