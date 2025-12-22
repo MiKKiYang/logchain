@@ -14,9 +14,8 @@ MEMBER_ID="$1"
 MEMBER_NAME="$2"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SSL_DIR="${SCRIPT_DIR}/../ssl"
-CA_DIR="${SSL_DIR}/ca"
-CLIENT_DIR="${SSL_DIR}/clients/${MEMBER_ID}"
+CA_DIR="${SCRIPT_DIR}/ca"
+CLIENT_DIR="${SCRIPT_DIR}/clients/${MEMBER_ID}"
 
 # Check if CA exists
 if [ ! -f "${CA_DIR}/ca-cert.pem" ] || [ ! -f "${CA_DIR}/ca-key.pem" ]; then
@@ -65,9 +64,15 @@ rm -f "${CLIENT_DIR}/client.csr"
 
 echo ""
 echo "Client certificate generated successfully!"
-echo "Certificate files:"
-echo "  - Client cert: ${CLIENT_DIR}/client-cert.pem"
-echo "  - Client key: ${CLIENT_DIR}/client-key.pem"
+echo ""
+echo "Client certificate files (send to ${MEMBER_NAME}):"
+echo "  - ${CLIENT_DIR}/client-cert.pem"
+echo "  - ${CLIENT_DIR}/client-key.pem"
+echo ""
+echo "CA certificate (also needed by client):"
+echo "  - ${CA_DIR}/ca-cert.pem"
+echo ""
+echo "Usage: Client should use these files for mTLS authentication."
 
 
 

@@ -7,7 +7,7 @@ set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SSL_DIR="${SCRIPT_DIR}/../nginx/ssl"
-CA_DIR="${SSL_DIR}/ca"
+CA_DIR="${SCRIPT_DIR}/ca"
 
 # Create directories
 mkdir -p "${SSL_DIR}" "${CA_DIR}"
@@ -73,10 +73,16 @@ rm -f "${SSL_DIR}/server.csr"
 
 echo ""
 echo "SSL certificates generated successfully!"
-echo "Certificate files:"
-echo "  - Server cert: ${SSL_DIR}/cert.pem"
-echo "  - Server key: ${SSL_DIR}/key.pem"
-echo "  - CA cert (for mTLS): ${SSL_DIR}/ca-cert.pem"
 echo ""
+echo "Server certificates (mounted to Docker):"
+echo "  - ${SSL_DIR}/cert.pem"
+echo "  - ${SSL_DIR}/key.pem"
+echo "  - ${SSL_DIR}/ca-cert.pem (for mTLS client verification)"
+echo ""
+echo "CA files (for signing client certificates):"
+echo "  - ${CA_DIR}/ca-cert.pem"
+echo "  - ${CA_DIR}/ca-key.pem"
+echo ""
+echo "Next: Run generate-client-cert.sh to create client certificates for mTLS."
 echo "For production, replace these with certificates from a trusted CA."
 
