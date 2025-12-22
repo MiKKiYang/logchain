@@ -49,14 +49,16 @@ These adapters work with the API Gateway to:
 ```bash
 export SYSLOG_UDP_ADDR=0.0.0.0:5514
 export SYSLOG_TCP_ADDR=0.0.0.0:6514
-export RATE_LIMIT_COUNT=
-export RATE_LIMIT_PERIOD=
-export RATE_LIMIT_ENABLED=true
+# 可选：如需启用自定义流控阈值，请取消注释并设置合适数值（否则使用配置中的默认值）
+# export RATE_LIMIT_COUNT=1000
+# export RATE_LIMIT_PERIOD=1s
+# export RATE_LIMIT_ENABLED=true
 export DEFAULT_ORG_ID=dkb
 export INGESTION_ENDPOINT=http://127.0.0.1:8093/v1/logs
 export INGESTION_API_KEY=dkbmtb
-export HTTP_BATCH_COUNT= 
-export HTTP_BATCH_PERIOD= 
+# 可选：如需启用自定义流控阈值，请取消注释并设置合适数值（否则使用配置中的默认值）
+# export HTTP_BATCH_COUNT=100
+# export HTTP_BATCH_PERIOD=2
 
 ./redpanda-connect lint ingestion/adapters/syslog.yml
 ./redpanda-connect run ingestion/adapters/syslog.yml
@@ -73,14 +75,16 @@ export KAFKA_CA_FILE=/root/logchain/ingestion/adapters/kafka/ssl/cert/ca-cert
 export SKIP_SERVER_CERT_VERIFY=false
 export KAFKA_CLIENT_CERT_FILE=/root/logchain/ingestion/adapters/kafka/ssl/cert/client/client.crt
 export KAFKA_CLIENT_KEY_FILE=/root/logchain/ingestion/adapters/kafka/ssl/cert/client/client.key
-export RATE_LIMIT_COUNT=
-export RATE_LIMIT_PERIOD=
-export RATE_LIMIT_ENABLED=true
+# 可选：如需启用自定义流控阈值，请取消注释并设置合适数值（否则使用配置中的默认值）
+# export RATE_LIMIT_COUNT=1000
+# export RATE_LIMIT_PERIOD=1s
+# export RATE_LIMIT_ENABLED=true
 export DEFAULT_ORG_ID=dkb
 export INGESTION_ENDPOINT=http://127.0.0.1:8093/v1/logs
 export INGESTION_API_KEY=dkbmtb
-export HTTP_BATCH_COUNT=
-export HTTP_BATCH_PERIOD=
+# 可选：如需启用自定义流控阈值，请取消注释并设置合适数值（否则使用配置中的默认值）
+# export HTTP_BATCH_COUNT=100
+# export HTTP_BATCH_PERIOD=2
 
 ./redpanda-connect lint ingestion/adapters/kafka-consumer.yml
 ./redpanda-connect run ingestion/adapters/kafka-consumer.yml
@@ -89,22 +93,25 @@ export HTTP_BATCH_PERIOD=
 ### S3 适配器
 ```bash
 export S3_BUCKET_NAME=my-container-bucket
-export S3_PREFIX=
+# 可选：如需启用自定义流控阈值，请取消注释并设置合适数值
+# export S3_PREFIX=sdb
 export AWS_REGION=local
 export COMPATIBLE_END_POINT=http://127.0.0.1:9000
 export FORCE_PATH_STYLE_URLS=false
 export AWS_ACCESS_KEY_ID=minio
 export AWS_SECRET_ACCESS_KEY=redpandaTieredStorage7
-export AWS_SESSION_TOKEN=
-export S3_DELETE_AFTER_READ=false
-export RATE_LIMIT_COUNT=
-export RATE_LIMIT_PERIOD=
-export RATE_LIMIT_ENABLED=true
+# 可选：如需启用自定义流控阈值，请取消注释并设置合适数值
+# export AWS_SESSION_TOKEN=
+# export S3_DELETE_AFTER_READ=false
+# export RATE_LIMIT_COUNT=1000
+# export RATE_LIMIT_PERIOD=1
+# export RATE_LIMIT_ENABLED=true
 export DEFAULT_ORG_ID=dkbmtb
 export INGESTION_ENDPOINT=http://127.0.0.1:8093/v1/logs
 export INGESTION_API_KEY=dkbmtb
-export HTTP_BATCH_COUNT=
-export HTTP_BATCH_PERIOD=
+# 可选：如需启用自定义流控阈值，请取消注释并设置合适数值（否则使用配置中的默认值）
+# export HTTP_BATCH_COUNT=100
+# export HTTP_BATCH_PERIOD=2
   
 ./redpanda-connect lint ingestion/adapters/s3-processor.yml
 ./redpanda-connect run ingestion/adapters/s3-processor.yml
@@ -122,7 +129,7 @@ export HTTP_BATCH_PERIOD=
 - 由于 UDP 协议不支持 TLS，请在 Benthos 所在节点的安全组/防火墙层配置 **IP 白名单 + 端口控制**，仅允许可信源 IP 访问 Syslog 监听端口。
 
 **Benthos Adapter 已实现：**
-- ✅ **服务端限流**：开启 `RATE_LIMIT_ENABLED=true` 时，内置的 `throttle` 处理器会按计数周期对处理管道中的超限流量施加背压而非丢弃。
+- ✅ **服务端限流**：开启 `RATE_LIMIT_ENABLED=true` 时，内置的 `rate_limit` 处理器会按计数周期对处理管道中的超限流量施加背压而非丢弃。
 
 ### Kafka 适配器
 
@@ -132,7 +139,7 @@ export HTTP_BATCH_PERIOD=
 **Benthos Adapter 已实现：**
 - ✅ **客户端证书认证**：Benthos 作为客户端连接 Kafka broker 时，支持配置客户端证书，并分发自己的 CA 证书给 Kafka，以此来实现 Kafka 对于客户端（Benthos）的证书认证。
 - ✅ **服务端证书验证（可选）**：Benthos 内可选择性地对 Kafka 服务端证书进行验证。
-- ✅ **服务端限流**：开启 `RATE_LIMIT_ENABLED=true` 时，内置的 `throttle` 处理器会按计数周期对处理管道中的超限流量施加背压而非丢弃。
+- ✅ **服务端限流**：开启 `RATE_LIMIT_ENABLED=true` 时，内置的 `rate_limit` 处理器会按计数周期对处理管道中的超限流量施加背压而非丢弃。
 
 ### AWS S3 适配器
 
@@ -141,4 +148,4 @@ export HTTP_BATCH_PERIOD=
 
 **Benthos Adapter 已实现：**
 - ✅ **客户端认证**：Benthos 作为客户端连接 S3 时，支持通过配置 S3 的 Access Key、Secret Key、Session Token 等方式来实现 S3 服务端对于 Benthos 客户端的认证。
-- ✅ **服务端限流**：开启 `RATE_LIMIT_ENABLED=true` 时，内置的 `throttle` 处理器会按计数周期对处理管道中的超限流量施加背压而非丢弃。
+- ✅ **服务端限流**：开启 `RATE_LIMIT_ENABLED=true` 时，内置的 `rate_limit` 处理器会按计数周期对处理管道中的超限流量施加背压而非丢弃。

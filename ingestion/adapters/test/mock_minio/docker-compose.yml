@@ -25,7 +25,7 @@ services:
       - minio
     entrypoint: >
       /bin/sh -c "
-      until (/usr/bin/mc alias set myminio http://minio:9000 minio redpandaTieredStorage7) do echo 'Waiting for minio...' && sleep 2; done &&
+      until (/usr/bin/mc alias set myminio http://minio:9000 minio redpandaTieredStorage7); do echo 'Waiting for minio...' && sleep 2; done &&
       /usr/bin/mc mb myminio/my-bucket
       "
     networks:
