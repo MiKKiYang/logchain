@@ -55,7 +55,7 @@ grpcurl -plaintext -d '{
 docker compose exec postgres psql -U testuser -d testdb -c "
 SELECT request_id, log_hash, source_org_id, status, received_timestamp
 FROM tbl_log_status
-ORDER BY received_at_db DESC
+ORDER BY received_timestamp DESC
 LIMIT 5;
 "
 ```
