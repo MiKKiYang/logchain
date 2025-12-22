@@ -6,7 +6,7 @@
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SSL_DIR="${SCRIPT_DIR}/../ssl"
+SSL_DIR="${SCRIPT_DIR}/../nginx/ssl"
 CA_DIR="${SSL_DIR}/ca"
 
 # Create directories

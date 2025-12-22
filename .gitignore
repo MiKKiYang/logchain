@@ -21,3 +21,9 @@ benchmark/
 
 # Generated configuration files
 config/clients/chainmaker.yml
+
+# Nginx runtime files (generated or containing secrets)
+ingress/nginx/conf.d/api-keys.json
+ingress/nginx/ssl/
+ingress/scripts/ca/
+ingress/scripts/clients/
