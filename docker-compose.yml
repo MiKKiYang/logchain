@@ -69,9 +69,7 @@ services:
       - postgres
       - kafka
       - kafka-init
-    ports:
-      - "8091:8091"  # HTTP
-      - "50051:50051"  # gRPC
+    # ports removed - only accessible via nginx
     environment:
       - TZ=Asia/Shanghai
     volumes:
@@ -106,8 +104,7 @@ services:
     container_name: query-service-tlng
     depends_on:
       - postgres
-    ports:
-      - "8083:8083"
+    # ports removed - only accessible via nginx
     environment:
       - TZ=Asia/Shanghai
     extra_hosts:
@@ -119,4 +116,25 @@ services:
       - ~/docker-volumes/tlng-query-logs:/var/log/query
       # ChainMaker path from .env file
       - ${CHAINMAKER_PATH}:/app/chainmaker-go:ro
+    restart: always
+
+  nginx:
+    build:
+      context: ./ingress
+      dockerfile: Dockerfile
+    container_name: nginx-gateway-tlng
+    depends_on:
+      - ingestion
+      - query
+    ports:
+      - "80:80"      # HTTP
+      - "443:443"    # HTTPS
+      - "50052:50052"  # gRPC
+    environment:
+      - TZ=Asia/Shanghai
+    volumes:
+      - ./ingress/nginx/ssl:/etc/nginx/ssl:ro
+      - ./ingress/nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./ingress/nginx/lua:/etc/nginx/lua:ro
+      - ~/docker-volumes/tlng-nginx-logs:/var/log/nginx
     restart: always
