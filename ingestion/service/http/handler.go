@@ -63,11 +63,17 @@ func (h *LogHandler) SubmitLog(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// 2.5. Get source_org_id from header (set by API Gateway) or from payload
+	sourceOrgID := r.Header.Get("X-Client-Org-ID")
+	if sourceOrgID == "" {
+		sourceOrgID = reqPayload.ClientSourceOrgID
+	}
+
 	// 3. Construct Service layer input
 	input := &core.LogInput{
 		LogContent:        reqPayload.LogContent,
 		ClientLogHash:     reqPayload.ClientLogHash,
-		ClientSourceOrgID: reqPayload.ClientSourceOrgID,
+		ClientSourceOrgID: sourceOrgID,
 	}
 
 	// Parse optional timestamp
