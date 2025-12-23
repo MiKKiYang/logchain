@@ -27,7 +27,7 @@ LOG_CONTENT="Test log at $(date +%s)"
 SUBMIT_RESPONSE=$(curl -sk -X POST "$BASE_URL/v1/logs" \
   -H "Content-Type: application/json" \
   -H "X-API-Key: $API_KEY" \
-  -d "{\"log_content\":\"$LOG_CONTENT}\"}")
+  -d "{\"log_content\":\"$LOG_CONTENT\"}")
 
 echo "$SUBMIT_RESPONSE" | jq .
 
