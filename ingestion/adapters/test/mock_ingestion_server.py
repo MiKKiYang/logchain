@@ -16,14 +16,6 @@ LOG_FILE = os.getenv('LOG_OUTPUT_FILE', 'ingested_logs.jsonl')
 HOST = os.getenv('INGESTION_HOST', '0.0.0.0')
 PORT = int(os.getenv('INGESTION_PORT', '8093'))
 
-
-def validate_api_key():
-    provided_key = request.headers.get('X-Api-Key')
-    if provided_key is None:
-        raise Unauthorized('Invalid API Key')
-    return True
-
-
 def write_log_to_file(data):
     timestamp = datetime.datetime.now().isoformat()
 
@@ -53,8 +45,6 @@ def write_log_to_file(data):
 def ingest_logs():
     """接收日志的端点"""
     try:
-        validate_api_key()
-
         if not request.is_json:
             return jsonify({'error': 'Content-Type must be application/json'}), 400
         

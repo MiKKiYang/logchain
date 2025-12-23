@@ -5,7 +5,7 @@ input:
     prefix: ${S3_PREFIX:}
     region: ${AWS_REGION:}
     endpoint: ${COMPATIBLE_END_POINT:http://localhost:9000}
-    force_path_style_urls: ${FORCE_PATH_STYLE_URLS:false}
+    force_path_style_urls: ${FORCE_PATH_STYLE_URLS:true}
     credentials:
       # ak
       id: ${AWS_ACCESS_KEY_ID:}
@@ -48,11 +48,11 @@ output:
     headers:
       Content-Type: application/json
       X-Source-Adapter: aws_s3
-      X-Api-Key: ${INGESTION_API_KEY:}
     timeout: 5s
     retries: 10
     retry_period: 2s
     max_retry_backoff: 1m
     batching:
-      count: ${HTTP_BATCH_COUNT:50}
+      count: ${HTTP_BATCH_COUNT:200}
+      byte_size: ${HTTP_BATCH_BYTES:200000}
       period: ${HTTP_BATCH_PERIOD:1s}
